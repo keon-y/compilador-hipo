@@ -37,3 +37,15 @@ Integer::Integer(std::string num){
     
     this->num = num;
 }
+
+std::string Integer::getFirstHalf() const {
+    return num.substr(1, 2);
+}
+
+std::string Integer::getSecondHalf() const {
+    return num.substr(3, 2);
+}
+
+unsigned int Integer::getNumericHalf() const {
+    return std::stoi(num.substr(3, 2));
+}

@@ -3,30 +3,30 @@
 
 class Add : public Instruction {
     public:
-        Add(std::string code) : Instruction(code) {};
-        void execute(unsigned int& pc) override;
+        Add() : Instruction() {};
+        void execute(unsigned int& pc, Integer num) override;
 };
 
 class Subtract : public Instruction {
     public:
-        Subtract(std::string code) : Instruction(code) {};
-        void execute(unsigned int& pc) override;
+        Subtract() : Instruction() {};
+        void execute(unsigned int& pc, Integer num) override;
 };
 
 class Multiply : public Instruction {
     public:
-        Multiply(std::string code) : Instruction(code) {};
-        void execute(unsigned int& pc) override;
+        Multiply() : Instruction() {};
+        void execute(unsigned int& pc, Integer num) override;
 };
 
 class Divide : public Instruction {
     public:
-        Divide(std::string code) : Instruction(code) {};
-        void execute(unsigned int& pc) override;
+        Divide() : Instruction() {};
+        void execute(unsigned int& pc, Integer num) override;
 };
 
 class Module : public Instruction {
     public:
-        Module(std::string code) : Instruction(code) {};
-        void execute(unsigned int& pc);
+        Module() : Instruction() {};
+        void execute(unsigned int& pc, Integer num);
 };

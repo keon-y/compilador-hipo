@@ -1,0 +1,4 @@
+CPU:
+    - A CPU pode conter um map para conversao de codigo para instrucao 
+    - A memoria pode ficar dentro da CPU
+    - Como escolho a posicao da memoria que vai ficar as variaveis

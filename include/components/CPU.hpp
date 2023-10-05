@@ -1,15 +1,20 @@
 #pragma once
 #include "Integer.hpp"
-#include <vector>
 #include "Instruction.hpp"
+#include "ArithmeticInstructions.hpp"
+#include <map>
+#include <string>
 
 class CPU {
     Integer AC;
     unsigned int PC;
-    std::vector<Instruction*> program;
+    Integer *memory;
+    std::map<std::string, Instruction*> instruction_codes;
+    unsigned int instruction_amount;
 
     public:
         CPU();
-        void addInstruction(Instruction* instruction);
+        void addToMemory(Integer value);
         void executeProgram();
+        ~CPU();
 };
