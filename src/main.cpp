@@ -5,7 +5,12 @@
 int main()
 {
     CPU teste = CPU();
-    Add add = Add("2");
+    teste.addToMemory(Integer("+2150"));
+    teste.addToMemory(Integer("+2250"));
+    teste.addToMemory(Integer("+2350"));
+    teste.addToMemory(Integer("+2450"));
+    teste.addToMemory(Integer("+2550"));
+    /*Add add = Add("2");
     Multiply m = Multiply("1");
     Divide d = Divide("0");
     Module modu = Module("4");
@@ -16,7 +21,7 @@ int main()
     teste.addInstruction(&m);
     teste.addInstruction(&d);
     teste.addInstruction(&modu);
-
+    */
 
     teste.executeProgram();
 

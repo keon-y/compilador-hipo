@@ -1,12 +1,10 @@
 #pragma once
 #include <string>
+#include <map>
 #include "Integer.hpp"
 
 class Instruction {
-    Integer code;
-
     public:
-        Instruction(std::string code);
-        virtual void execute(unsigned int& pc) = 0;
-        Integer getCode();
+        Instruction();
+        virtual void execute(unsigned int& pc, Integer num) = 0;
 };
