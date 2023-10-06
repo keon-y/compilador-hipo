@@ -1,5 +1,4 @@
 #include "CPU.hpp"
-#include <iostream>
 
 /* Construtor da CPU */
 CPU::CPU() {
@@ -31,8 +30,9 @@ void CPU::executeProgram(){
         *   depois, executa a instrucao, passando o PC e a segunda parte do 
         *   inteiro armazenado
         */
-        instruction_codes[(memory[PC]).getFirstHalf()]->execute(PC, memory[PC]);
+        instruction_codes[(memory[PC]).getFirstHalf()]->execute(this->PC, this->AC, this->memory, memory[PC]);
 }
+
 
 CPU::~CPU(){
     instruction_codes.clear();

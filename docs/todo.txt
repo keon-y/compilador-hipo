@@ -1,3 +1,5 @@
 (lembretes)
     - remover o print do integer 
 
+TODO:
+    - exception error na CPU caso ultrapasse o limite de memoria (100) no acesso

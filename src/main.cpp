@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "CPU.hpp"
 #include "ArithmeticInstructions.hpp"
+#include <iostream>
 
 int main()
 {
@@ -10,19 +11,13 @@ int main()
     teste.addToMemory(Integer("+2350"));
     teste.addToMemory(Integer("+2450"));
     teste.addToMemory(Integer("+2550"));
-    /*Add add = Add("2");
-    Multiply m = Multiply("1");
-    Divide d = Divide("0");
-    Module modu = Module("4");
-    Subtract sub = Subtract("3");
+    
+    std::cout << "Setando AC para 10" << std::endl;
+    teste.setAC(Integer(10));
 
-    teste.addInstruction(&add);
-    teste.addInstruction(&sub);
-    teste.addInstruction(&m);
-    teste.addInstruction(&d);
-    teste.addInstruction(&modu);
-    */
-
+    std::cout << "Setando memoria[50] para 2" << std::endl;
+    *teste.getAddress(50) = Integer(2);
+    
     teste.executeProgram();
 
     return 0;

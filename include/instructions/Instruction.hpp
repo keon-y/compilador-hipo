@@ -6,5 +6,5 @@
 class Instruction {
     public:
         Instruction();
-        virtual void execute(unsigned int& pc, Integer num) = 0;
+        virtual void execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) = 0;
 };

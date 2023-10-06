@@ -16,5 +16,11 @@ class CPU {
         CPU();
         void addToMemory(Integer value);
         void executeProgram();
+        void updatePC();
         ~CPU();
+        inline void setAC(Integer AC) { this->AC = AC; }
+        inline Integer getAC() const  { return AC; }
+
+        /* Retorna uma referencia para um endereco da memoria */
+        inline Integer* getAddress(const int index) { return memory + index;}
 };
