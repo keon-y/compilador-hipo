@@ -1,6 +1,8 @@
 #include "Integer.hpp"
 
 #define INTEGER_SIZE 4
+#define INTEGER_OVERFLOW_VALUE 10000
+#define OVERFLOW "-0000"
 
 /*
     Tipo INTEIRO, formato SINAL e INTEGER_SIZE NUMEROS DECIMAIS em sequencia
@@ -16,6 +18,12 @@ Integer::Integer() {
 
 /* Construtor que usa uma string como argumento*/
 Integer::Integer(std::string num){
+
+    //OVERFLOW
+    if (num.size() > INTEGER_SIZE) {
+        this->num = OVERFLOW;
+        return;
+    }
 
     /* Coloca o sinal no INTEIRO caso nao tenha */
     if (num[0] != '+' && num[0] != '-')
@@ -40,6 +48,11 @@ Integer::Integer(std::string num){
 
 Integer::Integer(int num) {
     std::string new_num = std::to_string(num);
+    //caso overflow
+    if ((new_num.size() > INTEGER_SIZE && new_num[0] != '-') || (new_num[0] == '-' && new_num.size() > INTEGER_SIZE + 1)) {
+        this->num = OVERFLOW;
+        return;
+    }
 
     /* Coloca o sinal no INTEIRO caso nao tenha */
     if (new_num[0] != '+' && new_num[0] != '-')
@@ -78,23 +91,35 @@ unsigned int Integer::getNumericHalf() const {
     return std::stoi(num.substr(1 + INTEGER_SIZE / 2, INTEGER_SIZE / 2));
 }
 
-/* Converte do tipo Integer para um tipo int (typecast)*/
-Integer::operator int() {
-    return num[0] == '+' ? std::stoi(num.substr(1, INTEGER_SIZE / 2)) : std::stoi(num.substr(1, INTEGER_SIZE / 2)) * -1;
+/* Retorna se um tipo Integer deu overflow */
+bool Integer::isOverflown() const {
+    return (num == OVERFLOW);
 }
 
-Integer Integer::operator+= (Integer &other) {
 
-    if (this->isOverflown() || other.isOverflown())
-        return Integer("-0");
+/* Converte do tipo Integer para um tipo int (typecast)*/
+Integer::operator int() {
+    if (this->isOverflown())
+       return INTEGER_OVERFLOW_VALUE;
+    return num[0] == '+' ? std::stoi(num.substr(1, INTEGER_SIZE)) : std::stoi(num.substr(1, INTEGER_SIZE)) * -1;
+}
+
+Integer& Integer::operator+= (Integer &other) {
+
+    //uma soma com qualquer overflow resulta em overflow
+    if (this->isOverflown() || other.isOverflown()) {
+        this->num = OVERFLOW;
+        return *this;
+    }
 
     int result = stoi(num) + (int)other;
-    std::string new_str = std::to_string(result);
-    size_t size = new_str.size();
+    std::string new_str = result < 0 ? "-" + std::to_string(result) : "+" + std::to_string(result);
 
-    if ((size > 4 && new_str[0] != '-') && (new_str[0] == '-' && size > 5)) {
-        //OVERFLOW
-
-    }
+    //checa se o novo numero deu overflow
+    if (new_str.size() > INTEGER_SIZE + 1) 
+        this->num = OVERFLOW;
+    else this->num = new_str;
+    
+    return *this;
         
 }

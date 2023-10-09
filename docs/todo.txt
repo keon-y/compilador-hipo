@@ -3,3 +3,4 @@
 
 TODO:
     - exception error na CPU caso ultrapasse o limite de memoria (100) no acesso
+    - atributo de overflow pra nao executar uma funcao varias vezes
