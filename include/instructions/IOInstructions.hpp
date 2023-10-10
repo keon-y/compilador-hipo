@@ -13,3 +13,9 @@ class Print : public Instruction {
         Print() : Instruction() {};
         void execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) override;
 };
+
+class Stop : public Instruction {
+    public:
+        Stop() : Instruction() {};
+        void execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) override;
+};

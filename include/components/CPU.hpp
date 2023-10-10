@@ -4,6 +4,7 @@
 #include "ArithmeticInstructions.hpp"
 #include "IOInstructions.hpp"
 #include "CopyInstructions.hpp"
+#include "BranchInstructions.hpp"
 #include <map>
 #include <string>
 
