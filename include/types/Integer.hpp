@@ -23,4 +23,5 @@ class Integer {
         operator int();
         Integer& operator+= (Integer& other);
         bool isOverflown() const;
+        inline std::string toString() const { return num; }
 };

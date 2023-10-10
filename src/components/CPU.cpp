@@ -15,7 +15,8 @@ CPU::CPU() {
     instruction_codes["23"] = new Multiply();
     instruction_codes["24"] = new Divide();
     instruction_codes["25"] = new Module();
-
+    instruction_codes["31"] = new Read();
+    instruction_codes["41"] = new Print();
 }
 
 void CPU::addToMemory(Integer value) {

@@ -20,7 +20,7 @@ Integer::Integer() {
 Integer::Integer(std::string num){
 
     //OVERFLOW
-    if (num.size() > INTEGER_SIZE) {
+    if (num.size() > INTEGER_SIZE + 1)  {
         this->num = OVERFLOW;
         return;
     }

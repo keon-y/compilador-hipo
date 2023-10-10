@@ -2,6 +2,7 @@
 #include "Integer.hpp"
 #include "Instruction.hpp"
 #include "ArithmeticInstructions.hpp"
+#include "IOInstructions.hpp"
 #include <map>
 #include <string>
 
