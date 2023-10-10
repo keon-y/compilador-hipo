@@ -10,6 +10,8 @@ CPU::CPU() {
 
     
     /* Inicializacao dos codigos */
+    instruction_codes["11"] = new CopyEA();
+    instruction_codes["12"] = new CopyAE();
     instruction_codes["21"] = new Add();
     instruction_codes["22"] = new Subtract();
     instruction_codes["23"] = new Multiply();

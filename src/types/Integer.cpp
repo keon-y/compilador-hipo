@@ -8,6 +8,7 @@
     Tipo INTEIRO, formato SINAL e INTEGER_SIZE NUMEROS DECIMAIS em sequencia
 */
 
+
 /* Construtor padrao (inicia em zero) */
 Integer::Integer() {
     this->num = '+';
@@ -104,7 +105,10 @@ Integer::operator int() {
     return num[0] == '+' ? std::stoi(num.substr(1, INTEGER_SIZE)) : std::stoi(num.substr(1, INTEGER_SIZE)) * -1;
 }
 
-Integer& Integer::operator+= (Integer &other) {
+
+/* OVERLOADS */
+
+Integer& Integer::operator+= (Integer& other) {
 
     //uma soma com qualquer overflow resulta em overflow
     if (this->isOverflown() || other.isOverflown()) {
@@ -122,4 +126,9 @@ Integer& Integer::operator+= (Integer &other) {
     
     return *this;
         
+}
+
+Integer& Integer::operator= (const Integer& other) {
+    this->num = other.toString();
+    return *this;
 }

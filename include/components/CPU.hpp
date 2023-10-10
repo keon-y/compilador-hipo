@@ -3,6 +3,7 @@
 #include "Instruction.hpp"
 #include "ArithmeticInstructions.hpp"
 #include "IOInstructions.hpp"
+#include "CopyInstructions.hpp"
 #include <map>
 #include <string>
 

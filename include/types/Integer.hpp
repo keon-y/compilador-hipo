@@ -20,8 +20,13 @@ class Integer {
         std::string getFirstHalf() const;
         std::string getSecondHalf() const;
         unsigned int getNumericHalf() const;
-        operator int();
-        Integer& operator+= (Integer& other);
         bool isOverflown() const;
         inline std::string toString() const { return num; }
+
+        operator int();
+        Integer& operator+= (Integer& other);
+        Integer& operator= (const Integer& other);
 };
+
+//utils 
+std::string formatNumber(std::string);
