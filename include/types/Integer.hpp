@@ -24,7 +24,6 @@ class Integer {
         inline std::string toString() const { return num; }
 
         operator int();
-        Integer& operator+= (Integer& other);
         Integer& operator= (const Integer& other);
 };
 

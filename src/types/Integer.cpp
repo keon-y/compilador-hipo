@@ -105,29 +105,6 @@ Integer::operator int() {
     return num[0] == '+' ? std::stoi(num.substr(1, INTEGER_SIZE)) : std::stoi(num.substr(1, INTEGER_SIZE)) * -1;
 }
 
-
-/* OVERLOADS */
-
-Integer& Integer::operator+= (Integer& other) {
-
-    //uma soma com qualquer overflow resulta em overflow
-    if (this->isOverflown() || other.isOverflown()) {
-        this->num = OVERFLOW;
-        return *this;
-    }
-
-    int result = stoi(num) + (int)other;
-    std::string new_str = result < 0 ? "-" + std::to_string(result) : "+" + std::to_string(result);
-
-    //checa se o novo numero deu overflow
-    if (new_str.size() > INTEGER_SIZE + 1) 
-        this->num = OVERFLOW;
-    else this->num = new_str;
-    
-    return *this;
-        
-}
-
 Integer& Integer::operator= (const Integer& other) {
     this->num = other.toString();
     return *this;
