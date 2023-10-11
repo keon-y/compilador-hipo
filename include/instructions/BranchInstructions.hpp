@@ -19,9 +19,9 @@ class BranchPositive : public Instruction {
         void execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) override;
 };
 
-class BranchPosiviteOrZero : public Instruction {
+class BranchPositiveOrZero : public Instruction {
     public:
-        BranchPosiviteOrZero() : Instruction() {};
+        BranchPositiveOrZero() : Instruction() {};
         void execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) override;
 };
 

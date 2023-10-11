@@ -24,6 +24,15 @@ CPU::CPU() {
 
     instruction_codes["50"] = new NoOperation();
     instruction_codes["51"] = new Branch();
+    instruction_codes["52"] = new BranchPositive();
+    instruction_codes["53"] = new BranchPositiveOrZero();
+    instruction_codes["54"] = new BranchNegative();
+    instruction_codes["55"] = new BranchNegativeOrZero();
+    instruction_codes["56"] = new BranchNotZero();
+    instruction_codes["57"] = new BranchZero();
+    instruction_codes["58"] = new BranchNotInfinite();
+    instruction_codes["59"] = new BranchInfinite();
+
 
     instruction_codes["70"] = new Stop();
 }
@@ -34,19 +43,19 @@ void CPU::addToMemory(Integer value) {
 
 void CPU::executeProgram(){
     while (PC != 101) {
-        std::cout << PC << std::endl;
 
+        /* Error handler basico para instrucoes inexistentes*/
         if (!instruction_codes[(memory[PC]).getFirstHalf()]) {
             std::cout << "[Erro!] A Instrucao com codigo " << (memory[PC]).getFirstHalf() << " nao existe!" << std::endl;
             break;
         }
 
-    /* 
-    *   Pega o os dois primeiros digitos do codigo (que indica a intrucao)
-    *   e busca no MAP `instruction_codes` a instrucao correspondente
-    *   depois, executa a instrucao, passando o PC e a segunda parte do 
-    *   inteiro armazenado
-    */
+        /* 
+        *   Pega o os dois primeiros digitos do codigo (que indica a intrucao)
+        *   e busca no MAP `instruction_codes` a instrucao correspondente
+        *   depois, executa a instrucao, passando o PC e a segunda parte do 
+        *   inteiro armazenado
+        */
 
         instruction_codes[(memory[PC]).getFirstHalf()]->execute(this->PC, this->AC, this->memory, memory[PC]);
     }
