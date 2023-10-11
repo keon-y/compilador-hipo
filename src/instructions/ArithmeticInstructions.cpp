@@ -1,27 +1,43 @@
 #include "ArithmeticInstructions.hpp"
-#include <iostream>
 
-void Add::execute(unsigned int& PC, Integer num) {
-    std::cout << "somou " << num.getNumericHalf() <<  " no acumulador" << std::endl;
+
+void Add::execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) {
     PC++;
+
+    /* Qualquer operacao sobre um numero com overflow resulta em um numero com overflow*/
+    if ( (*(memory + num.getNumericHalf())).isOverflown() || AC.isOverflown())
+        AC = Integer("-0");
+    else AC = (int) *(memory + num.getNumericHalf()) + (int) AC;
 }
 
-void Subtract::execute(unsigned int& PC, Integer num) {
-    std::cout << "subtraiu " << num.getNumericHalf() <<  " no acumulador" << std::endl;
+void Subtract::execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) {
     PC++;
+    
+    if ( (*(memory + num.getNumericHalf())).isOverflown() || AC.isOverflown())
+        AC = Integer("-0");
+    else AC = (int)AC - (int)(*(memory + num.getNumericHalf()));
 }
 
-void Multiply::execute(unsigned int& PC, Integer num) {
-    std::cout << "multiplicou " << num.getNumericHalf() <<  " no acumulador" << std::endl;
+void Multiply::execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) {
     PC++;
+    
+    if ( (*(memory + num.getNumericHalf())).isOverflown() || AC.isOverflown())
+        AC = Integer("-0");
+    else AC = (int) *(memory + num.getNumericHalf()) * (int) AC;
 }
 
-void Divide::execute(unsigned int& PC, Integer num) {
-    std::cout << "dividiu " << num.getNumericHalf() <<  " no acumulador" << std::endl;
+void Divide::execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) {
     PC++;
+    
+    if ( (*(memory + num.getNumericHalf())).isOverflown() || AC.isOverflown())
+        AC = Integer("-0");
+    else AC = (int)AC / (int)(*(memory + num.getNumericHalf()));
 }
 
-void Module::execute(unsigned int& PC, Integer num) {
-    std::cout << "modulo " << num.getNumericHalf() <<  " no acumulador" << std::endl;
+void Module::execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) { 
     PC++;
+    
+    if ( (*(memory + num.getNumericHalf())).isOverflown() || AC.isOverflown())
+        AC = Integer("-0");
+    else AC = (int)AC % (int)(*(memory + num.getNumericHalf()));
 }
