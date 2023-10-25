@@ -1,11 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include "CPU.hpp"
 #include "ArithmeticInstructions.hpp"
+#include "Window.hpp"
 #include <iostream>
 
 int main()
 {
     CPU teste = CPU();
+    Janela mainWindow;
+
+    while(mainWindow.getWindow()->isOpen()){
+        sf::Event evnt;
+
+        while(mainWindow.getWindow()->pollEvent(evnt))
+            if(evnt.type == sf::Event::Closed)
+                mainWindow.getWindow()->close();
+    }
 
     teste.addToMemory(Integer("+1130")); //0
     teste.addToMemory(Integer("+1240")); //1
