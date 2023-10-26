@@ -10,11 +10,12 @@ int main()
     Janela mainWindow;
 
     while(mainWindow.getWindow()->isOpen()){
-        sf::Event evnt;
+        sf::Event event;
 
-        while(mainWindow.getWindow()->pollEvent(evnt))
-            if(evnt.type == sf::Event::Closed)
+        while(mainWindow.getWindow()->pollEvent(event)){
+            if(event.type == sf::Event::Closed)
                 mainWindow.getWindow()->close();
+        }
     }
 
     teste.addToMemory(Integer("+1130")); //0
