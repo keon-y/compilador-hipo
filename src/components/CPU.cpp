@@ -53,8 +53,7 @@ void CPU::executeProgram(){
         /* 
         *   Pega o os dois primeiros digitos do codigo (que indica a intrucao)
         *   e busca no MAP `instruction_codes` a instrucao correspondente
-        *   depois, executa a instrucao, passando o PC e a segunda parte do 
-        *   inteiro armazenado
+        *   depois, executa a instrucao
         */
 
         instruction_codes[(memory[PC]).getFirstHalf()]->execute(this->PC, this->AC, this->memory, memory[PC]);
