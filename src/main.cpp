@@ -2,41 +2,27 @@
 #include "CPU.hpp"
 #include "Button.hpp"
 #include "MemoryBlock.hpp"
+#include "StateMachine.hpp"
+#include "States.hpp"
 #include <iostream>
 #include <cmath>
 
-#define MAX_MEMBLOCK_PER_LINE 10
-#define MEMBLOCK_X_OFFSET 5
-#define MEMBLOCK_Y_OFFSET 20
-#define MEMBLOCK_PADDING_SIDE 30
-#define MEMBLOCK_PADDING_TOP 100
+
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "SFML works!");
-    sf::View view = window.getDefaultView();
+    
+    StateMachine sm = StateMachine();
+    sm.Initialize(StateMachine::build<MenuState>(sm, window, true));
+    while (sm.isActive()) {
+        sm.Run();
+        sm.Update();
+        sm.Render();
+    }
+    return 0;
+    /*sf::View view = window.getDefaultView();
 
-    sf::Font font;
-    font.loadFromFile("font.ttf");
-
-    //PALETA
-    sf::Color green = sf::Color(162, 197, 121);
-    sf::Color light_green = sf::Color(210, 222, 50);
-
-    sf::Color blue = sf::Color(97, 163, 186);
-    sf::Color light_blue = sf::Color(125, 191, 201);
-
-    Button execBtn("Executar", {220, 80}, 30, green, sf::Color::White);
-    execBtn.setFont(font);
-    execBtn.setPosition({300, 200});
-
-    Button loadBtn("Carregar", {220, 80}, 30, blue, sf::Color::White);
-    loadBtn.setFont(font);
-    loadBtn.setPosition({300, 370});
-
-    Button passoBtn("Passo a Passo", {220, 80}, 30, blue, sf::Color::White);
-    passoBtn.setFont(font);
-    passoBtn.setPosition({300, 540});
 
 
     float memInitialSize = 50;
@@ -71,9 +57,10 @@ int main()
                     resized = true;
                     windowSize = window.getSize(); //atualizar o windowSize sempre que o usuario mudar o tamanho
                     sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-                    window.getSize().x < 800 ? view.zoom(1.2) : view.zoom(1);
                     window.setView(sf::View(visibleArea));
                 break;
+
+                
             }
         }
         window.clear();
@@ -102,9 +89,9 @@ int main()
         }
         resized = false;
         window.display();
-    }
+    }*/
 
-    return 0;
+    //return 0;
 
 
 

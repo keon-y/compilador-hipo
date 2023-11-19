@@ -40,6 +40,7 @@ void Button::setPosition(sf::Vector2f pos) {
 }
 
 void Button::draw(sf::RenderWindow &window){
+    
     window.draw(button);
     window.draw(shadow); //A ordem importa
     window.draw(text);
