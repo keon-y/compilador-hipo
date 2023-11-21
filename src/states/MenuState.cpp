@@ -2,10 +2,10 @@
 
 MenuState::MenuState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl) : 
 State {sm, w, isRepl}, 
-executeBtn {Button("Executar", {220, 80}, 30, sf::Color(162, 197, 121), sf::Color::White)},
-loadBtn {Button("Carregar", {220, 80}, 30, sf::Color(97, 163, 186), sf::Color::White)},
-stepBtn {Button("Passo a Passo", {220, 80}, 30, sf::Color(97, 163, 186), sf::Color::White)},
-returnBtn {Button("< Sair", {120, 70}, 12, sf::Color::Black, sf::Color::White)}  
+executeBtn {Button(w, "Executar", {220, 80}, 30, sf::Color(162, 197, 121), sf::Color::White)},
+loadBtn {Button(w, "Carregar", {220, 80}, 30, sf::Color(97, 163, 186), sf::Color::White)},
+stepBtn {Button(w, "Passo a Passo", {220, 80}, 30, sf::Color(97, 163, 186), sf::Color::White)},
+returnBtn {Button(w, "< Sair", {120, 70}, 12, sf::Color::Black, sf::Color::White)}  
 {
 
     if (!font.loadFromFile("font.ttf") ) return;
@@ -36,13 +36,14 @@ void MenuState::update() {
 				break;
 
 			case sf::Event::MouseButtonPressed:
-                if (executeBtn.isMouseOver(window)) 
+                if (executeBtn.isMouseOver()) 
                     next_state = StateMachine::build<ExecutingState>(state_machine, window, false);
-                //else if (stepBtn.isMouseOver(window))
+                else if (stepBtn.isMouseOver())
+                    stepBtn.setBgColor(sf::Color::White);
                     //next_state = StateMachine::build<State>(state_machine, window, false);
-                else if (loadBtn.isMouseOver(window))
+                else if (loadBtn.isMouseOver())
                     next_state = StateMachine::build<LoadState>(state_machine, window, false);
-                else if (returnBtn.isMouseOver(window)) //voltar no menu = sair
+                else if (returnBtn.isMouseOver()) //voltar no menu = sair
                     state_machine.Quit();
             break;
 				
@@ -56,9 +57,9 @@ void MenuState::update() {
 void MenuState::render() {
 
     window.clear();
-    executeBtn.draw(window);
-    loadBtn.draw(window);
-    stepBtn.draw(window);
-    returnBtn.draw(window);
+    executeBtn.draw();
+    loadBtn.draw();
+    stepBtn.draw();
+    returnBtn.draw();
     window.display();
 }

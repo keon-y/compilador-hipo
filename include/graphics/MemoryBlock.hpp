@@ -7,7 +7,7 @@ class MemoryBlock {
     sf::Text address;
     sf::Text value;
     sf::RectangleShape box;
-
+    sf::RenderWindow &window;
     public:
         /*
             1. indice do bloco de memoria
@@ -17,12 +17,12 @@ class MemoryBlock {
             5. tamanho do outline (px)
             6. cor da fonte
         */
-        MemoryBlock(int index, std::string storedValue, sf::Vector2f boxSize, int fontSize, int outlineThickness, sf::Color fontColor, sf::Color bgColor, sf::Color outlineColor);
+        MemoryBlock(sf::RenderWindow &, int, std::string, sf::Vector2f, int, int , sf::Color, sf::Color, sf::Color);
         void setSize(sf::Vector2f);
         void setPosition(sf::Vector2f);
         void setText(std::string);
         void setFont(sf::Font &);
         void setFontSize(unsigned int);
-        void draw(sf::RenderWindow &);
+        void draw();
         float getSize() const;
 };

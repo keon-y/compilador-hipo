@@ -8,12 +8,12 @@
 
 ExecutingState::ExecutingState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl) : 
 State {sm, w, isRepl}, 
-returnBtn {Button("< Voltar", {120, 70}, 12, sf::Color::Black, sf::Color::White)} 
+returnBtn {Button(w, "< Voltar", {120, 70}, 12, sf::Color::Black, sf::Color::White)} 
 {
     if (!font.loadFromFile("font.ttf") ) return;
 
     for (int i = 0; i < 100; i++) 
-        memMap.push_back(MemoryBlock(i, "+0000", sf::Vector2f(50, 50), 12, 2, sf::Color::White, sf::Color::Black, sf::Color::White));
+        memMap.push_back(MemoryBlock(w, i, "+0000", sf::Vector2f(50, 50), 12, 2, sf::Color::White, sf::Color::Black, sf::Color::White));
     
     
     float x0_pos = (window.getSize().x - ((10 * memMap[0].getSize() + MEMBLOCK_X_OFFSET) - MEMBLOCK_X_OFFSET)) / 2; //descobrir o x0 ideal para centralizar os 10 elementos
@@ -45,8 +45,8 @@ void ExecutingState::update() {
 				break;
 				
             case sf::Event::MouseButtonPressed:
-                if (returnBtn.isMouseOver(window)) 
-                    next_state = StateMachine::build<MenuState>(state_machine, window, false);	
+                if (returnBtn.isMouseOver()) 
+                    state_machine.resume();		
             break;
 
 			default:
@@ -60,9 +60,9 @@ void ExecutingState::render() {
     window.clear();
     
     for (int i = 0; i < 100; i++)
-        memMap[i].draw(window);
+        memMap[i].draw();
 
-    returnBtn.draw(window);
+    returnBtn.draw();
 
     window.display();
 }

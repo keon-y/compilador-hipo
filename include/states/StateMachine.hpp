@@ -14,6 +14,7 @@ class StateMachine {
         void Update();
         void Render();
         void Quit();
+        void resume();
 
         bool isActive() const;
 
@@ -24,6 +25,7 @@ class StateMachine {
 
 
     private:
+        bool isResuming;
         bool isRunning;
 	    std::stack<std::unique_ptr<State>> states;
 };

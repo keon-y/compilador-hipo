@@ -11,14 +11,27 @@ void StateMachine::Initialize(std::unique_ptr<State> initial_state) {
 
 
 void StateMachine::Run() {
+
+    //voltar a tela anterior
+    if (isResuming && !states.empty()) {
+        states.pop();
+        isResuming = false;
+    }
+
+
     if (!states.empty()) {
-    //se tiver proximo (mudanca de telas), excluir o primeiro
         auto next = states.top()->getNext();
-        if ( next ) { 
-            states.pop(); //excluir o primeiro antes de dar push
+        if (next) {
+            if (next->isReplacing()) 
+                states.pop(); //excluir caso for pra substituir
+            
             states.push(std::move(next));
         }
     }
+}
+
+void StateMachine::resume() {
+    isResuming = true;
 }
 
 void StateMachine::Update() {

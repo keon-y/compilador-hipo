@@ -1,6 +1,9 @@
 #include "Button.hpp"
 
-Button::Button(std::string t, sf::Vector2f size, int fontSize, sf::Color bgColor, sf::Color textColor) {
+Button::Button(sf::RenderWindow &w, std::string t, sf::Vector2f size, int fontSize, sf::Color bgColor, sf::Color textColor) :
+window {w}
+ {
+    
     text.setString(t);
     text.setFillColor(textColor);
     text.setCharacterSize(fontSize);
@@ -39,14 +42,14 @@ void Button::setPosition(sf::Vector2f pos) {
 
 }
 
-void Button::draw(sf::RenderWindow &window){
+void Button::draw(){
     
     window.draw(button);
     window.draw(shadow); //A ordem importa
     window.draw(text);
 }
 
-bool Button::isMouseOver(sf::RenderWindow &window) {
+bool Button::isMouseOver() {
     float mouseX = sf::Mouse::getPosition(window).x;
     float mouseY = sf::Mouse::getPosition(window).y;
     float buttonX = button.getPosition().x;
