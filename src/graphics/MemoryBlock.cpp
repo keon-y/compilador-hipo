@@ -1,10 +1,10 @@
 #include "MemoryBlock.hpp"
 
-MemoryBlock::MemoryBlock(sf::RenderWindow &w, int index, std::string storedValue, sf::Vector2f boxSize, int fontSize, int outlineThickness, sf::Color fontColor, sf::Color bgColor, sf::Color outlineColor) :
+MemoryBlock::MemoryBlock(sf::RenderWindow &w, std::string title, std::string storedValue, sf::Vector2f boxSize, int fontSize, int outlineThickness, sf::Color fontColor, sf::Color bgColor, sf::Color outlineColor) :
 window {w}
 {
     
-    address.setString(std::to_string(index));
+    address.setString(title);
     address.setFillColor(fontColor);
     address.setCharacterSize(fontSize);
 
@@ -62,4 +62,8 @@ void MemoryBlock::draw() {
 
 float MemoryBlock::getSize() const {
     return box.getGlobalBounds().width;
+}
+
+void MemoryBlock::setBorderColor(sf::Color color) {
+    box.setOutlineColor(color);
 }

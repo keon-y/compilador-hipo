@@ -10,14 +10,17 @@ class MemoryBlock {
     sf::RenderWindow &window;
     public:
         /*
-            1. indice do bloco de memoria
-            2. valor armazenado no bloco
-            3. posicao do bloco (x, y)
-            4. tamanho da fonte (px)
-            5. tamanho do outline (px)
-            6. cor da fonte
+            1. RenderWindow que vai ser desenhado
+            2. Titulo do bloco
+            3. Conteudo do bloco
+            4. Tamanho do bloco (width, height)
+            5. Tamanho da fonte
+            6. Tamanho da borda
+            7. Cor da fonte
+            8. Cor do fundo
+            9. Cor da borda
         */
-        MemoryBlock(sf::RenderWindow &, int, std::string, sf::Vector2f, int, int , sf::Color, sf::Color, sf::Color);
+        MemoryBlock(sf::RenderWindow &, std::string, std::string, sf::Vector2f, int, int , sf::Color, sf::Color, sf::Color);
         void setSize(sf::Vector2f);
         void setPosition(sf::Vector2f);
         void setText(std::string);
@@ -25,4 +28,5 @@ class MemoryBlock {
         void setFontSize(unsigned int);
         void draw();
         float getSize() const;
+        void setBorderColor(sf::Color color);
 };

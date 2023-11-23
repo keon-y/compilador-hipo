@@ -1,6 +1,6 @@
 #include "StateMachine.hpp"
 
-StateMachine::StateMachine() : isRunning{ false } {}
+StateMachine::StateMachine(CPU& c) : isRunning{ false }, cpu{c} {}
 
 
 
@@ -45,6 +45,10 @@ void StateMachine::Render() {
 void StateMachine::Quit() {
     isRunning = false;
     
+}
+
+CPU& StateMachine::getCPU() const {
+    return cpu;
 }
 
 bool StateMachine::isActive() const { return isRunning; }

@@ -41,23 +41,24 @@ void CPU::addToMemory(Integer value) {
     memory[instruction_amount++] = value;
 }
 
-void CPU::executeProgram(){
-    while (PC != 101) {
-
-        /* Error handler basico para instrucoes inexistentes*/
-        if (!instruction_codes[(memory[PC]).getFirstHalf()]) {
-            std::cout << "[Erro!] A Instrucao com codigo " << (memory[PC]).getFirstHalf() << " nao existe!" << std::endl;
-            break;
-        }
-
-        /* 
-        *   Pega o os dois primeiros digitos do codigo (que indica a intrucao)
-        *   e busca no MAP `instruction_codes` a instrucao correspondente
-        *   depois, executa a instrucao
-        */
-
-        instruction_codes[(memory[PC]).getFirstHalf()]->execute(this->PC, this->AC, this->memory, memory[PC]);
+bool CPU::execute(){
+    /* Error handler basico para instrucoes inexistentes*/
+    if (!instruction_codes[(memory[PC]).getFirstHalf()]) {
+        std::cout << "[Erro!] A Instrucao com codigo " << (memory[PC]).getFirstHalf() << " nao existe!" << std::endl;
+        return false;
     }
+
+    /* 
+     *   Pega o os dois primeiros digitos do codigo (que indica a intrucao)
+     *   e busca no MAP `instruction_codes` a instrucao correspondente
+     *   depois, executa a instrucao
+    */
+    if ((memory[PC]).getFirstHalf() == "70") { //encerrar
+        running = false;    
+        return false; 
+    } 
+    instruction_codes[(memory[PC]).getFirstHalf()]->execute(this->PC, this->AC, this->memory, memory[PC]);
+    return true;
 }
 
 

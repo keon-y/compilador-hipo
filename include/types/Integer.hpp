@@ -14,7 +14,6 @@ class Integer {
         Integer(std::string num);
         Integer(int num);
 
-        /* TODO: operator =*/
 
         std::string getNumber() const;
         std::string getFirstHalf() const;

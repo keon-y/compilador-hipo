@@ -3,18 +3,20 @@
 #include <memory>
 #include <stack>
 #include "State.hpp"
-
+#include "CPU.hpp"
 
 
 class StateMachine {
     public:
-        StateMachine ();
+        StateMachine (CPU &c);
 
         void Run();
         void Update();
         void Render();
         void Quit();
         void resume();
+
+        CPU& getCPU() const;
 
         bool isActive() const;
 
@@ -25,6 +27,7 @@ class StateMachine {
 
 
     private:
+        CPU& cpu;
         bool isResuming;
         bool isRunning;
 	    std::stack<std::unique_ptr<State>> states;

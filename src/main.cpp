@@ -12,8 +12,8 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "SFML works!");
-    
-    StateMachine sm = StateMachine();
+    CPU cpu = CPU();
+    StateMachine sm = StateMachine(cpu);
     sm.Initialize(StateMachine::build<MenuState>(sm, window, true));
     while (sm.isActive()) {
         sm.Run();

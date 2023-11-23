@@ -24,9 +24,14 @@ class MenuState : public State {
 };
 
 class ExecutingState : public State {
+
     sf::Font font;
-    std::vector<MemoryBlock> memMap;
+    std::vector<MemoryBlock> mem_map;
+    MemoryBlock pc;
+    MemoryBlock ac;
     Button returnBtn;
+
+    sf::Time execute_time; //controlar o tempo de cada execução
 
     public:
         ExecutingState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl);
@@ -37,7 +42,7 @@ class ExecutingState : public State {
 
 class LoadState : public State {
     //efeito para aparecer e sumir o _ na digitacao
-    sf::Clock clock;
+  
     sf::Time text_effect_time;
     bool show_cursor = true;
 

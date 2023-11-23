@@ -8,6 +8,7 @@ class StateMachine;
 class State {
 
     protected:
+        sf::Clock clock;
         StateMachine &state_machine;
         std::unique_ptr<State> next_state;
         sf::RenderWindow &window;

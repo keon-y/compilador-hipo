@@ -1,5 +1,6 @@
 #include "States.hpp"
 #include <fstream>
+#include <vector>
 
 LoadState::LoadState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl) : 
 State {sm, w, isRepl},
@@ -141,7 +142,9 @@ int LoadState::load(std::string filename){
     if (!file.is_open()) //nao encontrou
         return -1;
     
+    std::vector<std::string> v;
     std::string read;
+    
     
     while(file.good()) {
         file >> read;
@@ -151,7 +154,15 @@ int LoadState::load(std::string filename){
         for (int i = 1; i < 5; i++) {
             if (int(read[i]) < 48 || int(read[i]) > 57) return -4;
         }
-        std::cout << read;
+        v.push_back(read);
+    }
+
+    for (int i = v.size(); i < 100; i++) { //completar com +0000 o resto
+        v.push_back("0");
+    }
+
+    for(int i = 0; i < v.size(); i++) { //adicionar na memoria da cpu
+        state_machine.getCPU().addToMemory((Integer)v[i]);
     }
     return 0;
 }
