@@ -1,5 +1,6 @@
 #include "ShiftInstructions.hpp"
 
+
 void ShiftLeft::execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) {
     PC++;
     AC = Integer(AC.toString().erase(1) + "0");
@@ -7,5 +8,8 @@ void ShiftLeft::execute(unsigned int& PC, Integer &AC, Integer* memory, Integer 
 
 void ShiftRight::execute(unsigned int& PC, Integer &AC, Integer* memory, Integer num) {
     PC++;
-    AC = AC = Integer("0" + AC.toString().erase(4));
+    std::string t = AC.toString();
+    char signal = t[0];
+    t.erase(0);
+    AC = Integer(signal + "0" + t.erase(3));
 }

@@ -28,14 +28,14 @@ class ExecutingState : public State {
 
     sf::Font font;
     std::vector<MemoryBlock> mem_map;
-    MemoryBlock pc;
-    MemoryBlock ac;
     Button returnBtn;
+    MemoryBlock ac;
+    MemoryBlock pc;
 
-    bool isWaitingInput;
-    std::string input;
     Textbox ioBox;
+    bool isWaitingInput;
     Button submitBtn;
+    std::string input;
 
     sf::Text consoleTxt;
 

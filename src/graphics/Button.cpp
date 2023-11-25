@@ -1,7 +1,7 @@
 #include "Button.hpp"
 
 Button::Button(sf::RenderWindow &w, std::string t, sf::Vector2f size, int fontSize, sf::Color bgColor, sf::Color textColor, sf::Color shadowColor) :
-window {w}, active{true}, color{bgColor}
+window {w}, color{bgColor},active{true}
  {
     
     text.setString(t);
@@ -72,6 +72,6 @@ bool Button::isMouseOver() {
     float buttonY = button.getPosition().y;
     float buttonEndX = buttonX + button.getLocalBounds().width;
     float buttonEndY = buttonY + button.getLocalBounds().height;
-
-    return (mouseX < buttonEndX && mouseX > buttonX && mouseY < buttonEndY && mouseY > buttonY);
+    //precisa estar ativo pra ter qualquer interacao
+    return active && (mouseX < buttonEndX && mouseX > buttonX && mouseY < buttonEndY && mouseY > buttonY);
 }

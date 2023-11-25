@@ -147,7 +147,7 @@ int LoadState::load(std::string filename){
         v.push_back("0");
     }
     state_machine.getCPU().resetMemory(); //limpar a memoria caso tenha algo
-    for(int i = 0; i < v.size(); i++) { //adicionar na memoria da cpu
+    for(int i = 0; i < (int)v.size(); i++) { //adicionar na memoria da cpu
     
         state_machine.getCPU().addToMemory((Integer)v[i]);
     }

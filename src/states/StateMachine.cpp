@@ -1,6 +1,6 @@
 #include "StateMachine.hpp"
 
-StateMachine::StateMachine(CPU& c) : isRunning{ false }, cpu{c} {}
+StateMachine::StateMachine(CPU& c) : cpu{c}, isRunning{ false } {}
 
 
 

@@ -30,7 +30,7 @@ paused{false}
     
     
     float x0_pos = 120 + (window.getSize().x - ((10 * mem_map[0].getSize() + MEMBLOCK_X_OFFSET) - MEMBLOCK_X_OFFSET)) / 2; //descobrir o x0 ideal para centralizar os 10 elementos
-    for (int i = 0; i < mem_map.size(); i++) {
+    for (int i = 0; i < (int)mem_map.size(); i++) {
             
         int current_inline = (i % MAX_MEMBLOCK_PER_LINE); //quantos blocos tem na linha que esta sendo desenhada
         int yLevel = i / MAX_MEMBLOCK_PER_LINE; //Qual a altura da linha desenhada (comeca em 0)

@@ -54,6 +54,7 @@ void MenuState::update() {
 				break;
 		}
 	}
+    executeBtn.setActive(state_machine.getCPU().isLoaded());
 
 }
 
