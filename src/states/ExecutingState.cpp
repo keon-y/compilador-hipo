@@ -14,7 +14,11 @@ pc{MemoryBlock(w, "PC", "0", {50, 50}, 12, 2, white, black, white)},
 ioBox{Textbox(w, {130, 60}, white, white, 13, black)},
 isWaitingInput{false},
 submitBtn{Button(w, "Enviar", {80, 40}, 12, light_green, white, dark_green)},
-notif(Notification(w))
+notif(Notification(w)),
+blueTip{ColorTip(w, light_blue, {13,13}, "Lendo")},
+redTip{ColorTip(w, light_red, {13,13}, "Escrevendo")},
+greenTip{ColorTip(w, light_green, {13,13}, "Executando")},
+purpleTip{ColorTip(w, purple, {13,13}, "PC")}
 {
     state_machine.getCPU().initializeMemory();
     if (!font.loadFromFile("font.ttf") ) return;
@@ -63,6 +67,18 @@ notif(Notification(w))
     consoleTxt.setPosition({80, 245});
 
     notif.setFont(font);
+
+    blueTip.setFont(font);
+    blueTip.setPosition({30, 600});
+
+    redTip.setFont(font);
+    redTip.setPosition({30, 630});
+
+    greenTip.setFont(font);
+    greenTip.setPosition({30, 660});
+
+    purpleTip.setFont(font);
+    purpleTip.setPosition({30, 690});
 
 
 }
@@ -167,14 +183,6 @@ void ExecutingState::update() {
         3. Interpretar e executar a instrução lida.
     
     */
-    /*
-            CORES: azul  = valor sendo lido
-                   vermelho = valor sendo sobrescrevido
-                   verde = executando
-                   roxo = apontado pelo pc
-
-        
-        */
 
     mem_map[i_pc].setBorderColor(purple); //pintar onde o PC aponta
     
@@ -296,5 +304,11 @@ void ExecutingState::render() {
     window.draw(consoleTxt);
     if(notif.notifying())
         notif.draw();
+
+    blueTip.draw();
+    redTip.draw();
+    greenTip.draw();
+    purpleTip.draw();
+
     window.display();
 }

@@ -6,6 +6,7 @@
 #include "MemoryBlock.hpp"
 #include "Textbox.hpp"
 #include "Notification.hpp"
+#include "ColorTip.hpp"
 
 
 class MenuState : public State {
@@ -42,6 +43,17 @@ class ExecutingState : public State {
 
     sf::Time execute_time; //controlar o tempo de cada execução
     sf::Time notification_effect_time;
+
+    /*
+    CORES: azul     = valor sendo lido
+           vermelho = valor sendo sobrescrevido
+           verde    = executando
+           roxo     = apontado pelo pc
+        */
+    ColorTip blueTip;
+    ColorTip redTip;
+    ColorTip greenTip;
+    ColorTip purpleTip;
 
     public:
         ExecutingState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl);
