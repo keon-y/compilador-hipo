@@ -247,11 +247,15 @@ void ExecutingState::update() {
 
         switch(cpu.execute()) {
             case -1: //instrucao inexistente
+                mem_map[i_pc].setBorderColor(white);
+                mem_map[i_pc + 1].setBorderColor(white);
                 cpu.setRunning(false);
                 notif.notify("Instrucao nao encontrada", 2);
             break;
 
             case 0: //encerrou (codigo 70)
+                mem_map[i_pc].setBorderColor(white);
+                mem_map[i_pc + 1].setBorderColor(white);
                 notif.notify("Programa encerrado com sucesso!", 0);
             break;
 
