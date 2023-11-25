@@ -11,8 +11,7 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1024, 768), "SFML works!");
-    
+    sf::RenderWindow window(sf::VideoMode(1024, 768), "SFML works!", sf::Style::Close); 
     CPU cpu = CPU();
     StateMachine sm = StateMachine(cpu);
     sm.Initialize(StateMachine::build<MenuState>(sm, window, true));
