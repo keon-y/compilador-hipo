@@ -1,7 +1,7 @@
 #include "Button.hpp"
 
 Button::Button(sf::RenderWindow &w, std::string t, sf::Vector2f size, int fontSize, sf::Color bgColor, sf::Color textColor, sf::Color shadowColor) :
-window {w}
+window {w}, active{true}, color{bgColor}
  {
     
     text.setString(t);
@@ -25,8 +25,14 @@ void Button::setFont(sf::Font &font) {
     shadow.setFont(font);
 }
 
-void Button::setBgColor(sf::Color color) {
+void Button::setBgColor(sf::Color color, sf::Color shad) {
+    button_shadow.setFillColor(shad);
     button.setFillColor(color);
+}
+
+void Button::setText(std::string text) {
+    this->text.setString(text);
+    shadow.setString(text);
 }
 
 void Button::setTextColor(sf::Color color) {
@@ -46,8 +52,14 @@ void Button::setPosition(sf::Vector2f pos) {
 
 }
 
+void Button::setActive(bool b){
+    active = b;
+    b ? button.setFillColor(color) : button.setFillColor(sf::Color(64,64,64));
+}
+
 void Button::draw(){
-    window.draw(button_shadow);
+    if(active)
+        window.draw(button_shadow);
     window.draw(button);
     window.draw(shadow); //A ordem importa
     window.draw(text);

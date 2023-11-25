@@ -18,7 +18,9 @@ notif(Notification(w)),
 blueTip{ColorTip(w, light_blue, {13,13}, "Lendo")},
 redTip{ColorTip(w, light_red, {13,13}, "Escrevendo")},
 greenTip{ColorTip(w, light_green, {13,13}, "Executando")},
-purpleTip{ColorTip(w, purple, {13,13}, "PC")}
+purpleTip{ColorTip(w, purple, {13,13}, "PC")},
+pauseBtn{Button(w, "Pausar", {240, 70}, 15, light_red, white, dark_red)},
+paused{false}
 {
     state_machine.getCPU().initializeMemory();
     if (!font.loadFromFile("font.ttf") ) return;
@@ -44,8 +46,8 @@ purpleTip{ColorTip(w, purple, {13,13}, "PC")}
 
     ac.setFont(font);
     pc.setFont(font);
-    ac.setPosition({80, 120});
-    pc.setPosition({180, 120});
+    ac.setPosition({80, 150});
+    pc.setPosition({180, 150});
 
     state_machine.getCPU().setRunning(true);
 
@@ -59,6 +61,7 @@ purpleTip{ColorTip(w, purple, {13,13}, "PC")}
 
     submitBtn.setFont(font);
     submitBtn.setPosition({220, 280});
+    submitBtn.setActive(false);
 
     consoleTxt.setFont(font);
     consoleTxt.setCharacterSize(20);
@@ -80,6 +83,9 @@ purpleTip{ColorTip(w, purple, {13,13}, "PC")}
     purpleTip.setFont(font);
     purpleTip.setPosition({30, 690});
 
+    pauseBtn.setFont(font);
+    pauseBtn.setPosition({60, 400});
+
 
 }
 
@@ -97,6 +103,19 @@ void ExecutingState::update() {
             case sf::Event::MouseButtonPressed:
                 if (returnBtn.isMouseOver()) 
                     state_machine.resume();
+                else if (pauseBtn.isMouseOver()) {
+                    //pausou
+                    if (state_machine.getCPU().isRunning()) {
+                        pauseBtn.setText("Voltar");
+                        pauseBtn.setBgColor(light_green, dark_green);
+                        paused = true;
+                    } else {
+                        pauseBtn.setText("Pausar");
+                        pauseBtn.setBgColor(light_red, dark_red);
+                        paused = false;
+                    }
+                    state_machine.getCPU().setRunning(!paused);
+                }
                 else if (ioBox.isMouseOver() && isWaitingInput) {
                     ioBox.setSelected(ioBox.isMouseOver());
                 }
@@ -114,6 +133,7 @@ void ExecutingState::update() {
                         }
                     }
                     isWaitingInput = false;
+                    submitBtn.setActive(false);
                     //pegar o endereco apontado pelo PC, achar os 2 ultimos digitos e mudar o valor
                     //armazenado nesse endereco (os ultimos 2 digitos)
                     cpu.getAddress(cpu.getAddress(cpu.getPC())->getNumericHalf())->operator=(input);
@@ -145,6 +165,7 @@ void ExecutingState::update() {
                         }
                     }
                     isWaitingInput = false;
+                    submitBtn.setActive(false);
                     //pegar o endereco apontado pelo PC, achar os 2 ultimos digitos e mudar o valor
                     //armazenado nesse endereco (os ultimos 2 digitos)
                     cpu.getAddress(cpu.getAddress(cpu.getPC())->getNumericHalf())->operator=(input);
@@ -168,8 +189,8 @@ void ExecutingState::update() {
 
     
 
-    if (!state_machine.getCPU().isRunning() || isWaitingInput) {
-        execute_time = sf::seconds(2.9f);
+    if (!state_machine.getCPU().isRunning() || isWaitingInput ) {
+        if (!paused) execute_time = sf::seconds(2.9f);
         clock.restart(); //ficar reiniciando o tempo para nao acelerar depois de aceitar um input
         return;
     }
@@ -183,7 +204,7 @@ void ExecutingState::update() {
         3. Interpretar e executar a instrução lida.
     
     */
-
+   
     mem_map[i_pc].setBorderColor(purple); //pintar onde o PC aponta
     
     //1: pintar PC de azul para sinalizar a leitura
@@ -263,6 +284,7 @@ void ExecutingState::update() {
                 ioBox.setText(""); //limpar a caixa de IO
                 isWaitingInput = true;
                 notif.notify("Insira um valor na caixa do console", 1);
+                submitBtn.setActive(true);
             break;
 
             case 2: //escrever
@@ -313,6 +335,8 @@ void ExecutingState::render() {
     redTip.draw();
     greenTip.draw();
     purpleTip.draw();
+
+    pauseBtn.draw();
 
     window.display();
 }

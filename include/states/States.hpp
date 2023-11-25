@@ -55,6 +55,9 @@ class ExecutingState : public State {
     ColorTip greenTip;
     ColorTip purpleTip;
 
+    Button pauseBtn;
+    bool paused;
+
     public:
         ExecutingState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl);
 

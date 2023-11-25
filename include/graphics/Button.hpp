@@ -8,6 +8,8 @@ class Button {
     sf::Text text, shadow;
     sf::RectangleShape button, button_shadow;
     sf::RenderWindow &window;
+    sf::Color color;
+    bool active;
 
     public:
         Button(sf::RenderWindow &w, 
@@ -18,9 +20,11 @@ class Button {
             sf::Color textColor,
             sf::Color shadow_color);
         void setFont(sf::Font &font);
-        void setBgColor(sf::Color color);
+        void setBgColor(sf::Color color, sf::Color shad);
+        void setText(std::string text);
         void setTextColor(sf::Color color);
         void setPosition(sf::Vector2f pos);
         void draw();
+        void setActive(bool b);
         bool isMouseOver();
 };
