@@ -8,3 +8,5 @@ TODO:
 
 bug clicar 2 vezes pra Carregar
 bug voltar pra aba de execucao
+mem_map i_pc + 1 pode causar um out of bounds
+talvez botar a fonte no state

@@ -1,6 +1,6 @@
 #include "Button.hpp"
 
-Button::Button(sf::RenderWindow &w, std::string t, sf::Vector2f size, int fontSize, sf::Color bgColor, sf::Color textColor) :
+Button::Button(sf::RenderWindow &w, std::string t, sf::Vector2f size, int fontSize, sf::Color bgColor, sf::Color textColor, sf::Color shadowColor) :
 window {w}
  {
     
@@ -13,8 +13,11 @@ window {w}
     shadow.setCharacterSize(fontSize);
 
     button.setSize(size);
-    this->size = size;
     button.setFillColor(bgColor);
+
+    button_shadow.setSize(size);
+    button_shadow.setFillColor(shadowColor);
+
 }
 
 void Button::setFont(sf::Font &font) {
@@ -32,6 +35,7 @@ void Button::setTextColor(sf::Color color) {
 
 void Button::setPosition(sf::Vector2f pos) {
     button.setPosition(pos);
+    button_shadow.setPosition({pos.x, pos.y + 10});
 
     //centralizar o texto no botao
     float xPos = (pos.x + button.getGlobalBounds().width / 2) - (text.getGlobalBounds().width / 2);
@@ -43,7 +47,7 @@ void Button::setPosition(sf::Vector2f pos) {
 }
 
 void Button::draw(){
-    
+    window.draw(button_shadow);
     window.draw(button);
     window.draw(shadow); //A ordem importa
     window.draw(text);

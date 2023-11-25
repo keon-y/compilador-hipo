@@ -1,27 +1,32 @@
 #include "States.hpp"
+#include "Colors.hpp"
 
 MenuState::MenuState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl) : 
 State {sm, w, isRepl}, 
-executeBtn {Button(w, "Executar", {220, 80}, 30, sf::Color(162, 197, 121), sf::Color::White)},
-loadBtn {Button(w, "Carregar", {220, 80}, 30, sf::Color(97, 163, 186), sf::Color::White)},
-stepBtn {Button(w, "Passo a Passo", {220, 80}, 30, sf::Color(97, 163, 186), sf::Color::White)},
-returnBtn {Button(w, "< Sair", {120, 70}, 12, sf::Color::Black, sf::Color::White)}  
+executeBtn {Button(w, "Executar", {220, 80}, 30, light_green, white, dark_green)},
+loadBtn {Button(w, "Carregar", {220, 80}, 30, light_blue, white, dark_blue)},
+returnBtn {Button(w, "< Sair", {120, 70}, 12, black, white, black)}  
 {
 
     if (!font.loadFromFile("font.ttf") ) return;
    
     executeBtn.setFont(font);
-    executeBtn.setPosition({300, 200});
+    executeBtn.setPosition({window.getSize().x / 2.0f - 110, 350});
 
     loadBtn.setFont(font);
-    loadBtn.setPosition({300, 370});
+    loadBtn.setPosition({window.getSize().x / 2.0f - 110, 500});
 
-    stepBtn.setFont(font);
-    stepBtn.setPosition({300, 540});
 
     returnBtn.setFont(font);
     returnBtn.setPosition({10, 10});
     
+    txt.setFont(font);
+    txt.setFillColor(white);
+    txt.setCharacterSize(30);
+    txt.setString("Compilador HIPO");
+    txt.setOrigin({txt.getGlobalBounds().width/2, txt.getGlobalBounds().height/2 });
+    txt.setPosition({window.getSize().x/2.0f, 250});
+
 }
 
 
@@ -38,9 +43,6 @@ void MenuState::update() {
 			case sf::Event::MouseButtonPressed:
                 if (executeBtn.isMouseOver()) 
                     next_state = StateMachine::build<ExecutingState>(state_machine, window, false);
-                else if (stepBtn.isMouseOver())
-                    stepBtn.setBgColor(sf::Color::White);
-                    //next_state = StateMachine::build<State>(state_machine, window, false);
                 else if (loadBtn.isMouseOver())
                     next_state = StateMachine::build<LoadState>(state_machine, window, false);
                 else if (returnBtn.isMouseOver()) //voltar no menu = sair
@@ -52,14 +54,15 @@ void MenuState::update() {
 				break;
 		}
 	}
+
 }
 
 void MenuState::render() {
 
-    window.clear();
+    window.clear(black);
     executeBtn.draw();
     loadBtn.draw();
-    stepBtn.draw();
     returnBtn.draw();
+    window.draw(txt);
     window.display();
 }

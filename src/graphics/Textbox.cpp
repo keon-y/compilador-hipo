@@ -2,7 +2,6 @@
 
 Textbox::Textbox(sf::RenderWindow &w, sf::Vector2f size, sf::Color border, sf::Color textColor, int textSize, sf::Color bgColor)
 : window {w} { 
-
     box.setSize(size);
     box.setFillColor(bgColor);
     box.setOutlineThickness(2);
@@ -16,6 +15,8 @@ Textbox::Textbox(sf::RenderWindow &w, sf::Vector2f size, sf::Color border, sf::C
 
 void Textbox::addChar(int c) {
     text += static_cast<char>(c);
+    text_effect_time = sf::Time::Zero; //nao mostrar o _ quando ta digitando
+    show_cursor = false;
 }
 
 void Textbox::pop() {
@@ -62,11 +63,24 @@ void Textbox::draw() {
     window.draw(display_text);
 }
 
-void Textbox::update(bool s) {
-    //o _ so aparece se estiver selecionado
-    s && selected ? display_text.setString(text + "_") : display_text.setString(text);
+void Textbox::update() { //ficar piscando o _ quando esta selecionado porem nao digitando
+    text_effect_time += clock.restart();
+    if (text_effect_time >= sf::seconds(0.5f) ) {
+            show_cursor = !show_cursor;
+            text_effect_time = sf::Time::Zero;
+    }
+    show_cursor && selected ? display_text.setString(text + "_") : display_text.setString(text);
 }
 
 std::string Textbox::getText() const {
     return text;
+}
+
+void Textbox::setText(std::string text) {
+    display_text.setString(text);
+    this->text = text;
+}
+
+void Textbox::setBorderColor(sf::Color color) {
+    box.setOutlineColor(color);
 }

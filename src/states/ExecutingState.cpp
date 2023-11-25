@@ -1,22 +1,29 @@
 #include "States.hpp"
 
+#include "Colors.hpp"
+
 #define MAX_MEMBLOCK_PER_LINE 10
 #define MEMBLOCK_X_OFFSET 5
 #define MEMBLOCK_Y_OFFSET 5
 
 ExecutingState::ExecutingState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl) : 
 State {sm, w, isRepl}, 
-returnBtn {Button(w, "< Voltar", {120, 70}, 12, sf::Color::Black, sf::Color::White)},
-ac{MemoryBlock(w, "AC", "+0000", {50, 50}, 12, 2, sf::Color::White, sf::Color::Black, sf::Color::White)},
-pc{MemoryBlock(w, "PC", "0", {50, 50}, 12, 2, sf::Color::White, sf::Color::Black, sf::Color::White)}
+returnBtn {Button(w, "< Voltar", {120, 70}, 12, black, white, black)},
+ac{MemoryBlock(w, "AC", "+0000", {50, 50}, 12, 2, white, black, white)},
+pc{MemoryBlock(w, "PC", "0", {50, 50}, 12, 2, white, black, white)},
+ioBox{Textbox(w, {130, 60}, white, white, 13, black)},
+isWaitingInput{false},
+submitBtn{Button(w, "Enviar", {80, 40}, 12, light_green, white, dark_green)},
+notif(Notification(w))
 {
+    state_machine.getCPU().initializeMemory();
     if (!font.loadFromFile("font.ttf") ) return;
 
     for (int i = 0; i < 100; i++) 
-        mem_map.push_back(MemoryBlock(w, std::to_string(i), state_machine.getCPU().getStrMemoryAt(i), sf::Vector2f(50, 50), 12, 2, sf::Color::White, sf::Color::Black, sf::Color::White));
+        mem_map.push_back(MemoryBlock(w, std::to_string(i), state_machine.getCPU().getStrMemoryAt(i), sf::Vector2f(50, 50), 12, 2, white, black, white));
     
     
-    float x0_pos = (window.getSize().x - ((10 * mem_map[0].getSize() + MEMBLOCK_X_OFFSET) - MEMBLOCK_X_OFFSET)) / 2; //descobrir o x0 ideal para centralizar os 10 elementos
+    float x0_pos = 120 + (window.getSize().x - ((10 * mem_map[0].getSize() + MEMBLOCK_X_OFFSET) - MEMBLOCK_X_OFFSET)) / 2; //descobrir o x0 ideal para centralizar os 10 elementos
     for (int i = 0; i < mem_map.size(); i++) {
             
         int current_inline = (i % MAX_MEMBLOCK_PER_LINE); //quantos blocos tem na linha que esta sendo desenhada
@@ -33,18 +40,36 @@ pc{MemoryBlock(w, "PC", "0", {50, 50}, 12, 2, sf::Color::White, sf::Color::Black
 
     ac.setFont(font);
     pc.setFont(font);
-    ac.setPosition({300, 50});
-    pc.setPosition({370, 50});
+    ac.setPosition({80, 120});
+    pc.setPosition({180, 120});
 
     state_machine.getCPU().setRunning(true);
 
-    mem_map[0].setBorderColor(sf::Color::Green);
+    mem_map[0].setBorderColor(light_green);
 
     returnBtn.setFont(font);
     returnBtn.setPosition({10, 10});
+
+    ioBox.setFont(font);
+    ioBox.setPosition({120, 300});
+
+    submitBtn.setFont(font);
+    submitBtn.setPosition({220, 280});
+
+    consoleTxt.setFont(font);
+    consoleTxt.setCharacterSize(20);
+    consoleTxt.setString("Console");
+    consoleTxt.setFillColor(white);
+    consoleTxt.setPosition({80, 245});
+
+    notif.setFont(font);
+
+
 }
 
 void ExecutingState::update() {
+    
+    CPU &cpu = state_machine.getCPU();
     for (auto event = sf::Event{}; window.pollEvent(event);)
 	{
 		switch (event.type)
@@ -55,25 +80,85 @@ void ExecutingState::update() {
 				
             case sf::Event::MouseButtonPressed:
                 if (returnBtn.isMouseOver()) 
-                    state_machine.resume();		
+                    state_machine.resume();
+                else if (ioBox.isMouseOver() && isWaitingInput) {
+                    ioBox.setSelected(ioBox.isMouseOver());
+                }
+                else if (submitBtn.isMouseOver() && isWaitingInput) {
+                    //validar o input
+                    input = ioBox.getText();
+                    if (input.size() != 5 || (input[0] != '-' && input[0] != '+')) {
+                        notif.notify("Numero no formato errado, formato correto: +XXXX ou -XXXX", 2);
+                        break;
+                    }
+                    for (int i = 1; i < 5; i++) {
+                        if (int(input[i]) < 48 || int(input[i]) > 57) {
+                            notif.notify("Valor nao numerico inserido, formato correto: +XXXX ou -XXXX", 2);
+                            break;
+                        }
+                    }
+                    isWaitingInput = false;
+                    //pegar o endereco apontado pelo PC, achar os 2 ultimos digitos e mudar o valor
+                    //armazenado nesse endereco (os ultimos 2 digitos)
+                    cpu.getAddress(cpu.getAddress(cpu.getPC())->getNumericHalf())->operator=(input);
+                    cpu.updatePC();
+
+                    ioBox.setText("");
+                }
+            break;
+
+             case sf::Event::TextEntered:
+                if (std::isprint(event.text.unicode) && ioBox.isSelected() && isWaitingInput)
+                    ioBox.addChar(event.text.unicode);
+            break;
+
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::BackSpace && ioBox.isSelected() && isWaitingInput) 
+                    ioBox.pop();
+                if (event.key.code == sf::Keyboard::Enter && isWaitingInput) {
+                     //validar o input
+                    input = ioBox.getText();
+                    if (input.size() != 5 || (input[0] != '-' && input[0] != '+')) {
+                        notif.notify("Numero no formato errado (exemplo correto: +1421)", 2);
+                        break;
+                    }
+                    for (int i = 1; i < 5; i++) {
+                        if (int(input[i]) < 48 || int(input[i]) > 57) {
+                            notif.notify("Valor nao numerico inserido", 2);
+                            break;
+                        }
+                    }
+                    isWaitingInput = false;
+                    //pegar o endereco apontado pelo PC, achar os 2 ultimos digitos e mudar o valor
+                    //armazenado nesse endereco (os ultimos 2 digitos)
+                    cpu.getAddress(cpu.getAddress(cpu.getPC())->getNumericHalf())->operator=(input);
+                    cpu.updatePC();
+
+                    ioBox.setText("");
+                }
             break;
 
 			default:
 				break;
 		}
 	}
-    if (!state_machine.getCPU().isRunning()) return;
+
+    if(notif.notifying()) 
+        notif.move();
+    
+
+    if (isWaitingInput && ioBox.isSelected()) 
+        ioBox.update();
+
+    
+
+    if (!state_machine.getCPU().isRunning() || isWaitingInput) {
+        execute_time = sf::seconds(2.9f);
+        clock.restart(); //ficar reiniciando o tempo para nao acelerar depois de aceitar um input
+        return;
+    }
 
     execute_time += clock.restart();
-    /*
-            CORES: verde = instrucao sendo lida
-                   azul  = valor sendo lido
-                   vermelho = valor sendo sobrescrevido
-                   ciano = executando
-                   magenta = apontado pelo pc
-
-        
-        */
     unsigned int i_pc = state_machine.getCPU().getPC();
     /*
     TRES PARTES:
@@ -82,45 +167,113 @@ void ExecutingState::update() {
         3. Interpretar e executar a instrução lida.
     
     */
+    /*
+            CORES: azul  = valor sendo lido
+                   vermelho = valor sendo sobrescrevido
+                   verde = executando
+                   roxo = apontado pelo pc
 
-    mem_map[i_pc].setBorderColor(sf::Color::Magenta); //pintar onde o PC aponta
+        
+        */
+
+    mem_map[i_pc].setBorderColor(purple); //pintar onde o PC aponta
     
     //1: pintar PC de azul para sinalizar a leitura
     if (execute_time >= sf::seconds(3.0f)){
 
         //RESETAR AS CORES
-        ac.setBorderColor(sf::Color::White);
-        pc.setBorderColor(sf::Color::White);
+        ac.setBorderColor(white);
+        pc.setBorderColor(white);
+        ioBox.setBorderColor(white);
         for (int i = 0; i < 100; i++) { //pintar todos de branco exceto o PC (sendo executado) e PC + 1 (onde pc aponta)
-            mem_map[i].setText(state_machine.getCPU().getStrMemoryAt(i));
-            mem_map[i].setBorderColor(sf::Color::White);
+            mem_map[i].setText(cpu.getStrMemoryAt(i));
+            mem_map[i].setBorderColor(white);
         }
         
 
-        mem_map[i_pc].setBorderColor(sf::Color::Blue);
+        mem_map[i_pc].setBorderColor(light_blue);
     }
 
-    //2: pintar o prox de magenta para sinalizar o avanco do PC
+    //2: pintar o prox de roxo para sinalizar o avanco do PC
     if (execute_time >= sf::seconds(5.0f)){
-        mem_map[i_pc + 1].setBorderColor(sf::Color::Magenta);
+        mem_map[i_pc + 1].setBorderColor(purple);
         pc.setText(std::to_string(i_pc + 1)); //setar o PC temporariamente aqui para mostrar em cima
     }
 
-    //3: pintar de CIANO para sinalizar execucao e pintar valores sendo lidos/escritos etc
+    //3: pintar de VERDE para sinalizar execucao e pintar valores sendo lidos/escritos etc
     if(execute_time >= sf::seconds(7.0f)) { 
-        
-        if (state_machine.getCPU().getAddress(i_pc)->getFirstHalf() == "11") {
-            ac.setBorderColor(sf::Color::Red);
-            mem_map[state_machine.getCPU().getAddress(i_pc)->getNumericHalf()].setBorderColor(sf::Color::Blue);
+        std::string opcode = cpu.getAddress(i_pc)->getFirstHalf();
+        if (opcode == "11") { //AC recebe END
+            ac.setBorderColor(light_red);
+            mem_map[cpu.getAddress(i_pc)->getNumericHalf()].setBorderColor(light_blue);
         }
-        else if (state_machine.getCPU().getAddress(i_pc)->getFirstHalf() == "21") {
-            ac.setBorderColor(sf::Color::Red);
-            mem_map[state_machine.getCPU().getAddress(i_pc)->getNumericHalf()].setBorderColor(sf::Color::Blue);
+        else if(opcode == "12") { //END recebe AC
+            ac.setBorderColor(light_blue);
+            mem_map[cpu.getAddress(i_pc)->getNumericHalf()].setBorderColor(light_red);
         }
-        mem_map[i_pc].setBorderColor(sf::Color::Cyan);
-        state_machine.getCPU().execute();
-        ac.setText(state_machine.getCPU().getAC().toString());
-        pc.setText(std::to_string(state_machine.getCPU().getPC()));
+        //se for uma operacao aritmetica, sempre vai ler o segundo valor
+        else if (opcode[0] == '2') {
+            ac.setBorderColor(light_red);
+            mem_map[cpu.getAddress(i_pc)->getNumericHalf()].setBorderColor(light_blue);
+        }
+        else if (opcode == "31") { //leitura
+            mem_map[cpu.getAddress(i_pc)->getNumericHalf()].setBorderColor(light_red);
+            ioBox.setBorderColor(light_blue);
+        }
+        else if(opcode == "41") { //escrita
+            mem_map[cpu.getAddress(i_pc)->getNumericHalf()].setBorderColor(light_blue);
+            ioBox.setBorderColor(light_red);
+        }
+        else if (opcode[0] == '5') { //branches
+            //pintar de branco onde PC aponta, pois em caso de branch ficariam 2 magentas ate todos os blocos forem recoloridos
+            mem_map[i_pc+1].setBorderColor(white);
+            mem_map[cpu.getAddress(i_pc)->getNumericHalf()].setBorderColor(light_blue);
+            pc.setBorderColor(light_red);
+        }
+        else if(opcode[0] == '6') { //shifts
+            ac.setBorderColor(light_red);
+        }
+        mem_map[i_pc].setBorderColor(light_green);
+
+        //HANDLER PARA RESULTADOS DA CPU
+
+        switch(cpu.execute()) {
+            case -1: //instrucao inexistente
+                cpu.setRunning(false);
+                notif.notify("Instrucao nao encontrada", 2);
+            break;
+
+            case 0: //encerrou (codigo 70)
+                notif.notify("Programa encerrado com sucesso!", 0);
+            break;
+
+            case 1: //aguardado leitura
+                ioBox.setText(""); //limpar a caixa de IO
+                isWaitingInput = true;
+                notif.notify("Insira um valor na caixa do console", 1);
+            break;
+
+            case 2: //escrever
+                /*codigo extenso que faz o seguinte:
+                    encontra o pc -> encontra a memoria que ele aponta -> 
+                    pega a segunda metade da memoria que o PC aponta ->
+                    pega a memoria que a segunda metade aponta ->
+                    pega o conteudo
+                
+                */
+                ioBox.setText(cpu.getAddress(cpu.getAddress(cpu.getPC())->getNumericHalf())->toString());
+                
+                cpu.updatePC();
+            break;
+
+            case 3: //instrucao executada
+
+            break;
+        }
+
+
+        ac.setText(cpu.getAC().toString());
+        pc.setText(std::to_string(cpu.getPC()));
         execute_time = sf::Time::Zero;
     }
 
@@ -129,13 +282,19 @@ void ExecutingState::update() {
 
 void ExecutingState::render() {
     
-    window.clear();
+    window.clear(black);
     
     for (int i = 0; i < 100; i++)
         mem_map[i].draw();
     ac.draw();
     pc.draw();
     returnBtn.draw();
+    ioBox.draw();
 
+    submitBtn.draw();
+
+    window.draw(consoleTxt);
+    if(notif.notifying())
+        notif.draw();
     window.display();
 }

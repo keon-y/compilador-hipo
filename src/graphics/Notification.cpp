@@ -1,5 +1,7 @@
 #include "Notification.hpp"
 
+#include "Colors.hpp"
+
 Notification::Notification(sf::RenderWindow &w) :
 window {w}, isMovingDown {true}, isNotifying{false}
 {
@@ -15,29 +17,6 @@ window {w}, isMovingDown {true}, isNotifying{false}
     
 }
 
-void Notification::setText(std::string text) {
-    this->text.setString(text);
-    this->text.setOrigin({this->text.getGlobalBounds().width/2, this->text.getGlobalBounds().height/2});
-    
-}
-
-void Notification::setBgColor(char type) {
-    switch (type){
-        case 0: //verde
-            box.setFillColor(sf::Color::Green);
-            box.setOutlineColor(sf::Color::Yellow);
-        break;
-        case 1: //azul
-            box.setFillColor(sf::Color::Blue);
-            box.setOutlineColor(sf::Color::Yellow);
-        break;
-        case 2: //vermelho
-            box.setFillColor(sf::Color::Red);
-            box.setOutlineColor(sf::Color::Yellow);
-        break;
-    }
-
-}
 
 void Notification::setFont(sf::Font &font) {
     text.setFont(font);
@@ -50,26 +29,49 @@ void Notification::draw(){
 
 }
 
-void Notification::notify() {
+void Notification::notify(std::string text, int type) {
+
+    switch (type){
+        case 0: //verde
+            box.setFillColor(light_green);
+            box.setOutlineColor(dark_green);
+        break;
+        case 1: //azul
+            box.setFillColor(light_blue);
+            box.setOutlineColor(dark_blue);
+        break;
+        case 2: //vermelho
+            box.setFillColor(light_red);
+            box.setOutlineColor(dark_red);
+        break;
+    }
+
+    this->text.setString(text);
+    this->text.setOrigin({this->text.getGlobalBounds().width/2, this->text.getGlobalBounds().height/2});
+
     isNotifying = true;
     isMovingDown = true;
     box.setPosition({window.getSize().x/2.0f, box.getSize().y/-2.0f});
     this->text.setPosition({window.getSize().x/2.0f, -box.getSize().y/2.0f});
+
+    
 }
 bool Notification::notifying() const { return isNotifying;}
 
-void Notification::move(sf::Time &time) {
-    if (isMovingDown) {
-        box.move({0, 1});
-        text.move({0, 1});
-        isMovingDown = box.getPosition().y < box.getGlobalBounds().height/2;
-        time = sf::Time::Zero;
-    } else {
-
-        if (time.asSeconds() >= 0.04f) {
-            box.move({0, -1});
-            text.move({0, -1});
+void Notification::move() {
+    notification_effect_time += clock.restart();
+    if (notification_effect_time >= sf::seconds(0.005f)) {
+        if (isMovingDown) {
+            box.move({0, 1});
+            text.move({0, 1});
+            isMovingDown = box.getPosition().y < box.getGlobalBounds().height/2;
+            notification_effect_time = sf::Time::Zero;
+        } else {
+            if (notification_effect_time.asSeconds() >= 2.5f) {
+                box.move({0, -1});
+                text.move({0, -1});
+            }
+            if (box.getPosition().y < box.getGlobalBounds().height / -2.0f) isNotifying = false;
         }
-        if (box.getPosition().y < 0) isNotifying = false;
     }
 }

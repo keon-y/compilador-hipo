@@ -1,12 +1,13 @@
 #include "States.hpp"
 #include <fstream>
 #include <vector>
+#include "Colors.hpp"
 
 LoadState::LoadState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl) : 
 State {sm, w, isRepl},
-returnBtn {Button(w, "< Voltar", {120, 70}, 12, sf::Color::Black, sf::Color::White)},
-textbox {Textbox(w, {300, 80}, sf::Color::White, sf::Color::White, 20, sf::Color::Black)},
-submitBtn {Button(w, "Carregar", {200, 70}, 18, sf::Color::Blue, sf::Color::White)}, 
+returnBtn {Button(w, "< Voltar", {120, 70}, 12, black, white, black)},
+textbox {Textbox(w, {300, 80}, white, white, 20, black)},
+submitBtn {Button(w, "Carregar", {200, 70}, 18, light_blue, white, dark_blue)}, 
 notif{Notification(w)}
 {
     if (!font.loadFromFile("font.ttf") ) return;
@@ -27,7 +28,7 @@ notif{Notification(w)}
 
 void LoadState::render() {
     
-    window.clear();
+    window.clear(black);
     
     returnBtn.draw();
     textbox.draw();
@@ -63,29 +64,19 @@ void LoadState::update() {
                         int loadState = load(textbox.getText());
                         switch(loadState) {
                             case 0:
-                                notif.setText("Arquivo carregado!");
-                                notif.setBgColor(0);
-                                notif.notify();
+                                notif.notify("Arquivo carregado com sucesso!", 0);
                             break;
                             case -1:
-                                notif.setText("Arquivo nao encontrado!");
-                                notif.setBgColor(2);
-                                notif.notify();
+                                notif.notify("Arquivo nao encontrado!", 2);
                             break;
                             case -2:
-                                notif.setText("Algum valor com mais ou menos de 5 digitos!");
-                                notif.setBgColor(2);
-                                notif.notify();
+                                notif.notify("Algum valor com mais ou menos de 5 digitos!", 2);
                             break;
                             case -3:
-                                notif.setText("Algum valor nao inicia com + ou -");
-                                notif.setBgColor(2);
-                                notif.notify();
+                                notif.notify("Algum valor nao inicia com + ou -", 2);
                             break;
                             case -4:
-                                notif.setText("Algum valor nao numerico no arquivo!");
-                                notif.setBgColor(2);
-                                notif.notify();
+                                notif.notify("Algum valor nao numerico no arquivo!", 2);
                             break;
 
                         }
@@ -113,31 +104,17 @@ void LoadState::update() {
 	}
 
     //animacoes
-    if(notif.notifying() || textbox.isSelected()) {
-        auto temp = clock.restart();
+    if(notif.notifying()) //animacao da notificacao
+        notif.move();
 
-        if (textbox.isSelected()) { //animacao da textbox
-            text_effect_time += temp;
-
-            if (text_effect_time >= sf::seconds(0.005f) ) {
-                show_cursor = !show_cursor;
-                text_effect_time = sf::Time::Zero;
-            }
-        }
-        
-        if(notif.notifying()) { //animacao da notificacao
-            notification_effect_time += temp;
-
-            if (notification_effect_time >= sf::seconds(0.00005f)) 
-                notif.move(notification_effect_time);
-
-        }
-        
-    }
-    textbox.update(show_cursor);
+    
+    if(textbox.isSelected())
+        textbox.update();
 }
 
 int LoadState::load(std::string filename){
+
+
     std::ifstream file(filename);
     if (!file.is_open()) //nao encontrou
         return -1;
@@ -149,10 +126,19 @@ int LoadState::load(std::string filename){
     while(file.good()) {
         file >> read;
         //checar os digitos e o tamanho para ver se esta no formato certo
-        if (read.size() != 5) return -2;
-        if (read[0] != '-' && read[0] != '+' ) return -3;
+        if (read.size() != 5) {
+            file.close();
+            return -2;
+        }
+        if (read[0] != '-' && read[0] != '+' ) {
+            file.close();   
+            return -3;
+        }
         for (int i = 1; i < 5; i++) {
-            if (int(read[i]) < 48 || int(read[i]) > 57) return -4;
+            if (int(read[i]) < 48 || int(read[i]) > 57) {
+                file.close();
+                return -4;
+            }
         }
         v.push_back(read);
     }
@@ -160,9 +146,11 @@ int LoadState::load(std::string filename){
     for (int i = v.size(); i < 100; i++) { //completar com +0000 o resto
         v.push_back("0");
     }
-
+    state_machine.getCPU().resetMemory(); //limpar a memoria caso tenha algo
     for(int i = 0; i < v.size(); i++) { //adicionar na memoria da cpu
+    
         state_machine.getCPU().addToMemory((Integer)v[i]);
     }
+    file.close();
     return 0;
 }

@@ -9,9 +9,9 @@
 
 
 class MenuState : public State {
+    sf::Text txt;
     sf::Font font;
     Button executeBtn;
-    Button stepBtn;
     Button loadBtn;
     Button returnBtn;
 
@@ -31,7 +31,17 @@ class ExecutingState : public State {
     MemoryBlock ac;
     Button returnBtn;
 
+    bool isWaitingInput;
+    std::string input;
+    Textbox ioBox;
+    Button submitBtn;
+
+    sf::Text consoleTxt;
+
+    Notification notif;
+
     sf::Time execute_time; //controlar o tempo de cada execução
+    sf::Time notification_effect_time;
 
     public:
         ExecutingState(StateMachine &sm, sf::RenderWindow &w, const bool isRepl);
