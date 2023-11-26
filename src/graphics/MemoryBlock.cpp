@@ -21,7 +21,6 @@ window {w}
 
 void MemoryBlock::setSize(sf::Vector2f size) {
     box.setSize(size);
-    //mudar ou nao o tamanh do outline 
 }
 
 void MemoryBlock::setPosition(sf::Vector2f pos) {

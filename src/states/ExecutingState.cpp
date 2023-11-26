@@ -224,7 +224,7 @@ void ExecutingState::update() {
     }
 
     //2: pintar o prox de roxo para sinalizar o avanco do PC
-    if (execute_time >= sf::seconds(5.0f)){
+    if (execute_time >= sf::seconds(5.0f) && i_pc < 99){
         mem_map[i_pc + 1].setBorderColor(purple);
         pc.setText(std::to_string(i_pc + 1)); //setar o PC temporariamente aqui para mostrar em cima
     }
@@ -276,7 +276,8 @@ void ExecutingState::update() {
 
             case 0: //encerrou (codigo 70)
                 mem_map[i_pc].setBorderColor(white);
-                mem_map[i_pc + 1].setBorderColor(white);
+                if (i_pc < 99)
+                    mem_map[i_pc + 1].setBorderColor(white);
                 notif.notify("Programa encerrado com sucesso!", 0);
             break;
 

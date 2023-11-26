@@ -1,0 +1,4 @@
+1. Criar a classe X que herda Instruction
+2. Criar a funcao execute
+3. Colocar na CPU.cpp dentro de instruction_codes, no endereco desejado para a instrucao,
+um novo ponteiro para a instrucao
