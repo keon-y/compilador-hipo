@@ -1,6 +1,6 @@
 # Compilador HIPO
 
-Este projeto é um compilador desenvolvido para o computador hipotético (HIPO)[https://www.ime.usp.br/~jstern/miscellanea/MaterialDidatico/hipo.htm] descrito por Julio M. Stern.
+Este projeto é um compilador desenvolvido para o computador hipotético [HIPO](https://www.ime.usp.br/~jstern/miscellanea/MaterialDidatico/hipo.htm) descrito por Julio M. Stern.
 
 ## Descrição do Projeto
 
